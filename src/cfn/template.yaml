@@ -1,0 +1,301 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: This template deploys the Amazon Rekognition Virtual Proctor (uksb-1qoed5fri)
+Transform: AWS::Serverless-2016-10-31
+
+Globals:
+  Function:
+    Runtime: nodejs12.x
+    MemorySize: 128
+    Timeout: 30
+    Environment:
+      Variables:
+        COLLECTION_ID: !Ref ResourcePrefix
+        FACES_TABLENAME: !Ref FacesTable
+        REGION: !Ref AWS::Region
+        VERSION: '0.1'
+  Api:
+    EndpointConfiguration: REGIONAL
+    Cors:
+      AllowMethods: "'*'"
+      AllowHeaders: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+      AllowOrigin: "'*'"
+    Auth:
+      DefaultAuthorizer: CognitoAuthorizer
+      Authorizers:
+        CognitoAuthorizer:
+          UserPoolArn: !GetAtt CognitoUserPool.Arn
+      AddDefaultAuthorizerToCorsPreflight: False
+    GatewayResponses:
+      DEFAULT_4XX:
+        ResponseTemplates:
+          "application/json": '{ "Message": $context.error.messageString }'
+        ResponseParameters:
+          Headers:
+            Access-Control-Allow-Methods: "'*'"
+            Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+            Access-Control-Allow-Origin: "'*'"
+      BAD_REQUEST_BODY:
+        StatusCode: 422
+        ResponseTemplates:
+          "application/json": '{ "Message": $context.error.messageString }'
+        ResponseParameters:
+          Headers:
+            Access-Control-Allow-Methods: "'*'"
+            Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+            Access-Control-Allow-Origin: "'*'"
+      BAD_REQUEST_PARAMETERS:
+        StatusCode: 422
+        ResponseTemplates:
+          "application/json": '{ "Message": $context.error.messageString }'
+        ResponseParameters:
+          Headers:
+            Access-Control-Allow-Methods: "'*'"
+            Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+            Access-Control-Allow-Origin: "'*'"
+
+Parameters:
+  AdminEmail:
+    Description: Creates a username to be used for Authentication. It needs to be an e-mail address.
+    Type: String
+    AllowedPattern: ^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$
+  ResourcePrefix:
+    Description: AWS Resources are named based on the value of this parameter. You must customise this if you are launching more than one instance of the stack within the same account.
+    Type: String
+    Default: VirtualProctor
+    AllowedPattern: ^[a-zA-Z0-9_]*$
+  CreateCloudFrontDistribution:
+    Description: Creates a CloudFront distribution for accessing the web interface of the demo. This must be enabled if S3 Block Public Access is enabled at an account level.
+    Type: String
+    Default: "false"
+    AllowedValues:
+      - "true"
+      - "false"
+
+Conditions:
+  WithCloudFront: !Equals [!Ref CreateCloudFrontDistribution, 'true']
+
+Outputs:
+  url:
+    Value: !If 
+      - WithCloudFront
+      - !Sub 'https://${CloudFrontDistribution.DomainName}'
+      - !Sub 'https://${WebUIBucket.RegionalDomainName}/index.html'
+    Description: Virtual Proctor URL
+
+Resources:
+
+  SetupRekognitionAndWebUI:
+    Type: Custom::Setup
+    Properties:
+      ServiceToken: !GetAtt LambdaSetup.Arn
+      Region: !Ref AWS::Region
+
+  WebUIBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketEncryption: 
+        ServerSideEncryptionConfiguration: 
+        - ServerSideEncryptionByDefault:
+            SSEAlgorithm: AES256
+      CorsConfiguration:
+        CorsRules:
+        - AllowedHeaders: ['*']
+          AllowedMethods: [GET]
+          AllowedOrigins: ['*']
+          Id: !Sub RekogCorsRule
+          MaxAge: 3600
+
+  WebUIBucketReadPolicy:
+    Type: AWS::S3::BucketPolicy
+    Condition: WithCloudFront
+    Properties:
+      Bucket: !Ref WebUIBucket
+      PolicyDocument:
+        Statement:
+        - Action: s3:GetObject
+          Effect: Allow
+          Resource: !Sub arn:aws:s3:::${WebUIBucket}/*
+          Principal:
+            CanonicalUser: !GetAtt CloudFrontOriginAccessIdentity.S3CanonicalUserId
+
+  CognitoIdentityPool:
+    Type: AWS::Cognito::IdentityPool
+    Properties:
+      IdentityPoolName: !Sub RekogIdentityPool${ResourcePrefix}
+      AllowUnauthenticatedIdentities: false
+      CognitoIdentityProviders: 
+        -
+          ClientId: !Ref CognitoUserPoolClient
+          ProviderName: !GetAtt CognitoUserPool.ProviderName
+
+  CognitoIdentityPoolRole:
+    Type: AWS::Cognito::IdentityPoolRoleAttachment
+    Properties:
+      IdentityPoolId: !Ref CognitoIdentityPool
+      Roles:
+        authenticated: !GetAtt ApiGatewayInvokeRole.Arn
+        unauthenticated: !GetAtt ApiGatewayInvokeRole.Arn
+
+  CognitoUserPool:
+    Type: AWS::Cognito::UserPool
+    Properties:
+      UserPoolName: !Sub ${ResourcePrefix}RekogUsersPool
+      AdminCreateUserConfig:
+        AllowAdminCreateUserOnly: true
+        InviteMessageTemplate:
+          EmailMessage: 'Your Amazon Rekognition Virtual Proctor username is {username} and the temporary password is {####}'
+          EmailSubject: 'Your temporary password for Amazon Rekognition Virtual Proctor'
+          SMSMessage: 'Your Amazon Rekognition Virtual Proctor username is {username} and the temporary password is {####}'
+      AutoVerifiedAttributes:
+        - email
+      Policies:
+        PasswordPolicy:
+          MinimumLength: 6
+          RequireLowercase: false
+          RequireNumbers: false
+          RequireSymbols: false
+          RequireUppercase: false
+
+  CognitoUserPoolClient:
+    Type: AWS::Cognito::UserPoolClient
+    Properties:
+      UserPoolId: !Ref CognitoUserPool
+      ClientName: !Sub ${ResourcePrefix}RekogUsersPoolClient
+      GenerateSecret: false
+      RefreshTokenValidity: 1
+      
+  CognitoUserPoolUser:
+    Type: AWS::Cognito::UserPoolUser
+    Properties:
+      Username: !Ref AdminEmail
+      UserPoolId: !Ref CognitoUserPool
+      DesiredDeliveryMediums:
+        - EMAIL
+      UserAttributes:
+        - Name: email
+          Value: !Ref AdminEmail
+        - Name: email_verified
+          Value: "true"
+          
+  ApiGatewayInvokeRole:
+    Type: AWS::IAM::Role
+    Properties:
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AmazonAPIGatewayInvokeFullAccess
+      AssumeRolePolicyDocument:
+        Statement:
+          - Effect: Allow
+            Principal:
+              Federated:
+                - cognito-identity.amazonaws.com
+            Action: sts:AssumeRoleWithWebIdentity
+            Condition:
+              StringEquals:
+                "cognito-identity.amazonaws.com:aud": !Ref CognitoIdentityPool
+  # Lambdas
+  IndexFaceFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: index.indexHandler
+      CodeUri: ../backend/functions/proctor/
+      Events:
+        Get:
+          Type: Api
+          Properties:
+            Path: /faces/index
+            Method: post
+      Policies:
+        - DynamoDBWritePolicy:
+            TableName: !Ref FacesTable
+        - RekognitionWriteOnlyAccessPolicy:
+            CollectionId: !Ref ResourcePrefix
+
+  ProcessImageFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: index.processHandler
+      CodeUri: ../backend/functions/proctor/
+      Events:
+        Get:
+          Type: Api
+          Properties:
+            Path: /process
+            Method: post
+      Policies:
+        - DynamoDBReadPolicy:
+            TableName: !Ref FacesTable
+        - RekognitionReadPolicy:
+            CollectionId: !Ref ResourcePrefix
+        - RekognitionDetectOnlyPolicy: {}
+
+  LambdaSetup:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: index.handler
+      CodeUri: ../backend/functions/setup/
+      Description: !Sub Custom Lambda resource for the Virtual Proctor Cloudformation Stack
+      Environment:
+        Variables:
+          COLLECTION_ID: !Ref ResourcePrefix
+          API_GATEWAY: !Sub https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/
+          COGNITO_IDENTITY_POOL: !Ref CognitoIdentityPool
+          COGNITO_USERPOOL_ID: !Ref CognitoUserPool
+          COGNITO_USERPOOLCLIENT_ID: !Ref CognitoUserPoolClient
+          FROM_BUCKET: !Sub solution-builders-${AWS::Region}
+          CREATE_CLOUDFRONT_DISTRIBUTION: !Ref CreateCloudFrontDistribution
+          REGION: !Ref AWS::Region
+          TO_BUCKET: !Ref WebUIBucket
+      Policies:
+        - RekognitionWriteOnlyAccessPolicy:
+            CollectionId: !Ref ResourcePrefix
+        - S3WritePolicy:
+            BucketName: !Ref WebUIBucket
+
+  FacesTable: 
+    Type: AWS::DynamoDB::Table
+    Properties:
+      AttributeDefinitions: 
+        - 
+          AttributeName: ExternalImageId
+          AttributeType: S
+      KeySchema: 
+        - 
+          AttributeName: ExternalImageId
+          KeyType: HASH
+      BillingMode: PAY_PER_REQUEST
+
+  CloudFrontOriginAccessIdentity:
+    Type: AWS::CloudFront::CloudFrontOriginAccessIdentity
+    Condition: WithCloudFront
+    Properties:
+      CloudFrontOriginAccessIdentityConfig:
+        Comment: !Ref WebUIBucket
+
+  CloudFrontDistribution:
+    Type: AWS::CloudFront::Distribution
+    Condition: WithCloudFront
+    Properties:       
+      DistributionConfig:
+        Origins:
+        - DomainName: !GetAtt WebUIBucket.RegionalDomainName
+          Id: !Sub myS3Origin-${ResourcePrefix}
+          S3OriginConfig:
+            OriginAccessIdentity: !Sub origin-access-identity/cloudfront/${CloudFrontOriginAccessIdentity}
+        Enabled: true
+        HttpVersion: http2
+        Comment: The Distribution for the Rekognition Meter Web UI
+        DefaultRootObject: index.html
+        DefaultCacheBehavior:
+          AllowedMethods:
+          - HEAD
+          - GET
+          - OPTIONS
+          TargetOriginId: !Sub myS3Origin-${ResourcePrefix}
+          ForwardedValues:
+            QueryString: false
+            Cookies:
+              Forward: none
+          ViewerProtocolPolicy: redirect-to-https
+        PriceClass: PriceClass_All
+        ViewerCertificate:
+          CloudFrontDefaultCertificate: true
