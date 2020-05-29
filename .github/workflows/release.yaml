@@ -20,12 +20,18 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-
       # Setup
+      - name: Set up Python 3.7
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.7
       - name: Set up Nodejs 12
         uses: actions/setup-node@v1
         with:
           node-version: 12
       - name: Install dependencies
         run: npm i
+      - name: Install python dependencies
+        run: pip3 install -r requirements.txt
       - name: Build Template
         run: npm run build
       # Release if required
