@@ -75,6 +75,7 @@ const fetchFaces = async (imageBytes) => {
     facesTest.Success = nFaces === 1;
     facesTest.Details = nFaces;
   } catch (e) {
+    console.log(e);
     facesTest.Success = false;
     facesTest.Details = "Server error";
   }
@@ -83,12 +84,13 @@ const fetchFaces = async (imageBytes) => {
 
 const fetchLabels = async (imageBytes) => {
   /*
-    Detect Objects Of Interest
+    Detect Objects Of Interest and number of Persons
     Uses Rekognition's DetectLabels functionality
   */
 
   const objectsOfInterestLabels = OBJECTS_OF_INTEREST_LABELS.trim().split(",");
-  const labelsTest = { TestName: "Objects of Interest" };
+  const objectsOfInterestTest = { TestName: "Objects of Interest" };
+  const peopleTest = { TestName: "Person Detection" };
 
   const detectLabels = () =>
     rekognition
@@ -100,18 +102,27 @@ const fetchLabels = async (imageBytes) => {
 
   try {
     const labels = await detectLabels();
+
+    const people = labels.Labels.find((x) => x.Name === "Person");
+    const nPeople = people ? people.Instances.length : 0;
+    peopleTest.Success = nPeople === 1;
+    peopleTest.Details = nPeople;
+
     const objectsOfInterest = labels.Labels.filter((x) =>
       objectsOfInterestLabels.includes(x.Name)
     );
-    labelsTest.Success = objectsOfInterest.length === 0;
-    labelsTest.Details = labelsTest.Success
+    objectsOfInterestTest.Success = objectsOfInterest.length === 0;
+    objectsOfInterestTest.Details = objectsOfInterestTest.Success
       ? "0"
       : objectsOfInterest.map((x) => x.Name).join(", ");
   } catch (e) {
-    labelsTest.Success = false;
-    labelsTest.Details = "Server error";
+    console.log(e);
+    objectsOfInterestTest.Success = false;
+    objectsOfInterestTest.Details = "Server error";
+    peopleTest.Success = false;
+    peopleTest.Details = "Server error";
   }
-  return labelsTest;
+  return [objectsOfInterestTest, peopleTest];
 };
 
 const fetchModerationLabels = async (imageBytes) => {
@@ -139,6 +150,7 @@ const fetchModerationLabels = async (imageBytes) => {
       ? "0"
       : labels.ModerationLabels.map((l) => l.Name).join(", ");
   } catch (e) {
+    console.log(e);
     moderationLabelsTest.Success = false;
     moderationLabelsTest.Details = `Server error`;
   }
@@ -207,5 +219,5 @@ exports.processHandler = async (event) => {
     fetchModerationLabels(imageBytes),
   ]);
 
-  return respond(200, result);
+  return respond(200, result.flat());
 };
