@@ -327,5 +327,17 @@ h4 {
 svg {
   width: 24px;
   height: 24px;
-  margin-right: 4px;
+  margin-right: 8px;
+}
+
+:root {
+  --amplify-primary-color: #ec7211;
+  --amplify-font-family: Helvetica, Arial, sans-serif;
+  --amplify-text-md: 18px;
+  --amplify-text-sm: 14px;
+}
+
+.amplify-auth-container {
+  text-align: center;
+  margin: 5% auto 50px;
 }

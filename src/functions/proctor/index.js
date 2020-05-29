@@ -59,7 +59,7 @@ const fetchFaces = async (imageBytes) => {
   */
 
   const facesTest = {
-    TestName: "Only one face detected",
+    TestName: "Face Detection",
   };
 
   const detectFaces = () =>
@@ -69,10 +69,10 @@ const fetchFaces = async (imageBytes) => {
     const faces = await detectFaces();
     const nFaces = faces.FaceDetails.length;
     facesTest.Success = nFaces === 1;
-    if (!facesTest.Success) facesTest.Details = `${nFaces} faces detected`;
+    facesTest.Details = nFaces;
   } catch (e) {
     facesTest.Success = false;
-    facesTest.Details = "server error";
+    facesTest.Details = "Server error";
   }
   return facesTest;
 };
@@ -88,22 +88,26 @@ const fetchLabels = async (imageBytes) => {
   const forbiddenObjects = ["Mobile Phone", "Cell Phone"];
 
   const labelsTest = {
-    TestName: "No forbidden objects detected",
+    TestName: "Objects of Interest",
   };
 
   const detectLabels = () =>
-    rekognition.detectLabels({ Image: { Bytes: imageBytes } }).promise();
+    rekognition
+      .detectLabels({ Image: { Bytes: imageBytes }, MinConfidence: 85 })
+      .promise();
 
   try {
     const labels = await detectLabels();
-    const forbidden = labels.Labels.filter(
-      (x) => forbiddenObjects.includes(x.Name) && x.Confidence > 85
+    const forbidden = labels.Labels.filter((x) =>
+      forbiddenObjects.includes(x.Name)
     );
     labelsTest.Success = forbidden.length === 0;
-    labelsTest.Details = `total: ${labels.Labels.length}, forbidden: ${forbidden.length}`;
+    labelsTest.Details = labelsTest.Success
+      ? "0"
+      : forbidden.map((x) => x.Name).join(", ");
   } catch (e) {
     labelsTest.Success = false;
-    labelsTest.Details = "server error";
+    labelsTest.Details = "Server error";
   }
   return labelsTest;
 };
@@ -115,22 +119,27 @@ const fetchModerationLabels = async (imageBytes) => {
     Uses Rekognition's DetectModerationLabels functionality
   */
   const moderationLabelsTest = {
-    TestName: "Image doesn't contain unsafe content",
+    TestName: "Unsafe Content",
   };
 
   const detectModerationLabels = () =>
     rekognition
-      .detectModerationLabels({ Image: { Bytes: imageBytes } })
+      .detectModerationLabels({
+        Image: { Bytes: imageBytes },
+        MinConfidence: 85,
+      })
       .promise();
 
   try {
     const labels = await detectModerationLabels();
     const nLabels = labels.ModerationLabels.length;
     moderationLabelsTest.Success = nLabels === 0;
-    moderationLabelsTest.Details = `${nLabels} labels detected`;
+    moderationLabelsTest.Details = moderationLabelsTest.Success
+      ? "0"
+      : labels.ModerationLabels.map((l) => l.Name).join(", ");
   } catch (e) {
     moderationLabelsTest.Success = false;
-    moderationLabelsTest.Details = `server error`;
+    moderationLabelsTest.Details = `Server error`;
   }
 
   return moderationLabelsTest;
@@ -146,9 +155,9 @@ const searchForIndexedFaces = async (imageBytes) => {
   */
 
   const faceMatchTest = {
-    TestName: "Face matched with indexed profile",
+    TestName: "Person Recognition",
     Success: false,
-    Details: "no face matched",
+    Details: "0",
   };
 
   const searchFace = () =>
@@ -177,7 +186,7 @@ const searchForIndexedFaces = async (imageBytes) => {
 
     if (faceDetails.Item) {
       faceMatchTest.Success = true;
-      faceMatchTest.Details = `matched Face: ${faceDetails.Item.FullName.S}`;
+      faceMatchTest.Details = faceDetails.Item.FullName.S;
     }
   } catch (e) {
     // When 0 faces are recognized, rekognition.searchFacesByImage throws an error
@@ -191,10 +200,10 @@ exports.processHandler = async (event) => {
   const imageBytes = Buffer.from(body.image, "base64");
 
   const result = await Promise.all([
-    fetchModerationLabels(imageBytes),
+    fetchLabels(imageBytes),
     searchForIndexedFaces(imageBytes),
     fetchFaces(imageBytes),
-    fetchLabels(imageBytes),
+    fetchModerationLabels(imageBytes),
   ]);
 
   return respond(200, result);

@@ -93,30 +93,32 @@ export default () => {
           </Row>
         </>
       ) : (
-        <AmplifyAuthenticator usernameAlias="email">
-          <AmplifySignIn
-            slot="sign-in"
-            usernameAlias="email"
-            formFields={[
-              {
-                type: "email",
-                label: "Username *",
-                placeholder: "Enter your username",
-                required: true,
-                inputProps: { autoComplete: "off" },
-              },
-              {
-                type: "password",
-                label: "Password *",
-                placeholder: "Enter your password",
-                required: true,
-                inputProps: { autoComplete: "off" },
-              },
-            ]}
-          >
-            <div slot="secondary-footer-content"></div>
-          </AmplifySignIn>
-        </AmplifyAuthenticator>
+        <div className="amplify-auth-container">
+          <AmplifyAuthenticator usernameAlias="email">
+            <AmplifySignIn
+              slot="sign-in"
+              usernameAlias="email"
+              formFields={[
+                {
+                  type: "email",
+                  label: "Username *",
+                  placeholder: "Enter your username",
+                  required: true,
+                  inputProps: { autoComplete: "off" },
+                },
+                {
+                  type: "password",
+                  label: "Password *",
+                  placeholder: "Enter your password",
+                  required: true,
+                  inputProps: { autoComplete: "off" },
+                },
+              ]}
+            >
+              <div slot="secondary-footer-content"></div>
+            </AmplifySignIn>
+          </AmplifyAuthenticator>
+        </div>
       )}
     </div>
   );

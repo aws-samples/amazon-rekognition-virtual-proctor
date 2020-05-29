@@ -1,15 +1,20 @@
 import React from "react";
+import { Card } from "react-bootstrap";
 
 import Icon from "./Icon";
 
 export default ({ testResults }) => (
-  <div className="p-2">
+  <div className="tests-container">
     {testResults.map((test, index) => (
-      <p className="text-justify p-1" key={index}>
-        <Icon type={test.Success ? "success" : "fail"} />
-        {test.TestName}
-        {test.Details && ` (${test.Details})`}
-      </p>
+      <Card style={{ marginTop: "20px", textAlign: "left" }} key={index}>
+        <Card.Header>
+          <Icon type={test.Success ? "success" : "fail"} />
+          {test.TestName}
+        </Card.Header>
+        <Card.Body>
+          <Card.Text>{test.Details}</Card.Text>
+        </Card.Body>
+      </Card>
     ))}
   </div>
 );
