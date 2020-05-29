@@ -9,7 +9,7 @@
     "cfn-ensure-dist": "if [ ! -d './templates' ]; then mkdir templates; fi",
     "cfn-lambdas-dist": "if [ ! -d './backend/functions/' ]; then mkdir -p backend/functions/; fi",
     "cfn-test-local": "npm run cfn-build && rain deploy templates/template.yaml reko-scaffolding -r eu-west-1",
-    "deploy": "npm run zip && aws --profile publisher s3 cp ./`npm run echo-version --silent`.zip s3://$CFN_BUCKET/$npm_package_name/`npm run echo-version --silent`/$npm_package_name.zip",
+    "deploy": "npm run zip && aws s3 cp ./`npm run echo-version --silent`.zip s3://$CFN_BUCKET/$npm_package_name/`npm run echo-version --silent`/$npm_package_name.zip",
     "echo-version": "echo v`node -e \"console.log(require('node-yaml').readSync('templates/template.yaml').Globals.Function.Environment.Variables.VERSION)\"`",
     "postinstall": "cd src/web-ui && npm i && cd ../functions/setup && npm i && cd ../proctor && npm i",
     "start": "cd src/web-ui && npm start",
