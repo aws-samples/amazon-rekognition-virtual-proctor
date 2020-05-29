@@ -14,7 +14,7 @@ Globals:
         MIN_CONFIDENCE: !Ref MinConfidence
         OBJECTS_OF_INTEREST_LABELS: !Join [",", !Ref ObjectsOfInterestLabels]
         REGION: !Ref AWS::Region
-        VERSION: '0.2'
+        VERSION: '0.3'
   Api:
     EndpointConfiguration: REGIONAL
     Cors:
@@ -114,7 +114,7 @@ Resources:
         - AllowedHeaders: ['*']
           AllowedMethods: [GET]
           AllowedOrigins: ['*']
-          Id: !Sub RekogCorsRule
+          Id: RekogCorsRule
           MaxAge: 3600
 
   WebUIBucketReadPolicy:
@@ -245,7 +245,7 @@ Resources:
     Properties:
       Handler: index.handler
       CodeUri: ../backend/functions/setup/
-      Description: !Sub Custom Lambda resource for the Virtual Proctor Cloudformation Stack
+      Description: Custom Lambda resource for the Virtual Proctor Cloudformation Stack
       Environment:
         Variables:
           COLLECTION_ID: !Ref ResourcePrefix
@@ -258,12 +258,24 @@ Resources:
           REGION: !Ref AWS::Region
           TO_BUCKET: !Ref WebUIBucket
       Policies:
-        - RekognitionWriteOnlyAccessPolicy:
-            CollectionId: !Ref ResourcePrefix
-        - S3WritePolicy:
-            BucketName: !Ref WebUIBucket
-        - S3ReadPolicy:
-            BucketName: !Sub solution-builders-${AWS::Region}
+        - Statement:
+          - Effect: Allow
+            Action:
+              - s3:PutObject*
+              - s3:DeleteObject*
+              - s3:ListBucket*
+              - s3:ListObject*
+            Resource:
+              - !Sub arn:aws:s3:::${WebUIBucket}
+              - !Sub arn:aws:s3:::${WebUIBucket}/*
+          - Effect: Allow
+            Action: s3:GetObject
+            Resource: !Sub arn:aws:s3:::solution-builders-${AWS::Region}/*
+          - Effect: Allow
+            Action:
+              - rekognition:CreateCollection
+              - rekognition:DeleteCollection
+            Resource: !Sub arn:aws:rekognition:${AWS::Region}:${AWS::AccountId}:collection/${ResourcePrefix}
 
   FacesTable: 
     Type: AWS::DynamoDB::Table
