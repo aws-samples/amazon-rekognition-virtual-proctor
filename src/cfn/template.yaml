@@ -14,7 +14,7 @@ Globals:
         MIN_CONFIDENCE: !Ref MinConfidence
         OBJECTS_OF_INTEREST_LABELS: !Join [",", !Ref ObjectsOfInterestLabels]
         REGION: !Ref AWS::Region
-        VERSION: '0.1'
+        VERSION: '0.2'
   Api:
     EndpointConfiguration: REGIONAL
     Cors:
@@ -262,6 +262,8 @@ Resources:
             CollectionId: !Ref ResourcePrefix
         - S3WritePolicy:
             BucketName: !Ref WebUIBucket
+        - S3ReadPolicy:
+            BucketName: !Sub solution-builders-${AWS::Region}
 
   FacesTable: 
     Type: AWS::DynamoDB::Table
