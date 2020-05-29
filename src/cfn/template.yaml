@@ -14,7 +14,7 @@ Globals:
         MIN_CONFIDENCE: !Ref MinConfidence
         OBJECTS_OF_INTEREST_LABELS: !Join [",", !Ref ObjectsOfInterestLabels]
         REGION: !Ref AWS::Region
-        VERSION: '0.3'
+        VERSION: '0.4'
   Api:
     EndpointConfiguration: REGIONAL
     Cors:
@@ -78,7 +78,7 @@ Parameters:
   CreateCloudFrontDistribution:
     Description: Creates a CloudFront distribution for accessing the web interface of the demo. This must be enabled if S3 Block Public Access is enabled at an account level.
     Type: String
-    Default: "false"
+    Default: "true"
     AllowedValues:
       - "true"
       - "false"
@@ -248,23 +248,24 @@ Resources:
       Description: Custom Lambda resource for the Virtual Proctor Cloudformation Stack
       Environment:
         Variables:
-          COLLECTION_ID: !Ref ResourcePrefix
           API_GATEWAY: !Sub https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/
           COGNITO_IDENTITY_POOL: !Ref CognitoIdentityPool
           COGNITO_USERPOOL_ID: !Ref CognitoUserPool
           COGNITO_USERPOOLCLIENT_ID: !Ref CognitoUserPoolClient
-          FROM_BUCKET: !Sub solution-builders-${AWS::Region}
+          COLLECTION_ID: !Ref ResourcePrefix
           CREATE_CLOUDFRONT_DISTRIBUTION: !Ref CreateCloudFrontDistribution
+          FROM_BUCKET: !Sub solution-builders-${AWS::Region}
           REGION: !Ref AWS::Region
           TO_BUCKET: !Ref WebUIBucket
+      Timeout: 900
       Policies:
         - Statement:
           - Effect: Allow
             Action:
-              - s3:PutObject*
-              - s3:DeleteObject*
-              - s3:ListBucket*
-              - s3:ListObject*
+              - s3:PutObject
+              - s3:PutObjectAcl
+              - s3:DeleteObject
+              - s3:ListBucket
             Resource:
               - !Sub arn:aws:s3:::${WebUIBucket}
               - !Sub arn:aws:s3:::${WebUIBucket}/*
