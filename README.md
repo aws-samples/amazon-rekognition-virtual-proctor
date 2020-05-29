@@ -1,5 +1,16 @@
 ## Amazon Rekognition Virtual Proctor
 
+Virtual proctoring is the act of supervising an exam or course online.
+
+Using web-based applications, virtual proctoring platforms allow test takers to be virtually monitored by a human via the webcam on their computer.
+To increase the scale of the test taking and improve a human proctor’s ability to monitor students, virtual proctoring services are now implementing AI/ML to support the human proctor.
+
+Amazon Rekognition Virtual Proctor is a solution that leverages Amazon Rekognition to monitor that:
+
+1. the person who starts the exam is the same person that takes the exam (they don't switch to another student)
+2. only one face is looking at the screen
+3. there aren't any banned objects like cellphones in the room
+
 ### Index
 
 - [Architecture](#architecture)
@@ -13,7 +24,9 @@
 
 ### Architecture
 
-TODO Diagram
+<p align="center">
+  <img src="docs/diagram.png" alt="Architecture Diagram" />
+</p>
 
 ### Usage
 
@@ -28,22 +41,21 @@ To use the sample application you will require a [modern browser](https://canius
 The demo application is deployed as an [AWS CloudFormation](https://aws.amazon.com/cloudformation) template.
 
 > **Note**  
-You are responsible for the cost of the AWS services used while running this sample deployment. There is no additional cost for using this sample. For full details, see the following pricing pages for each AWS service you will be using in this sample.  Prices are subject to change.
-> * [Amazon Rekognition Pricing](https://aws.amazon.com/rekognition/pricing/)
-> * [Amazon S3 Pricing](https://aws.amazon.com/s3/pricing/)
-> * [Amazon Cognito Pricing](https://aws.amazon.com/cognito/pricing/)
-> * [Amazon CloudFront Pricing](https://aws.amazon.com/cloudfront/pricing/)
-
+> You are responsible for the cost of the AWS services used while running this sample deployment. There is no additional cost for using this sample. For full details, see the following pricing pages for each AWS service you will be using in this sample. Prices are subject to change.
+>
+> - [Amazon Rekognition Pricing](https://aws.amazon.com/rekognition/pricing/)
+> - [Amazon S3 Pricing](https://aws.amazon.com/s3/pricing/)
+> - [Amazon Cognito Pricing](https://aws.amazon.com/cognito/pricing/)
+> - [Amazon CloudFront Pricing](https://aws.amazon.com/cloudfront/pricing/)
 
 1. Deploy the latest CloudFormation template by following the link below for your preferred AWS region:
 
-|Region|Launch Template|
-|------|---------------|
-|**US East (N. Virginia)** (us-east-1) | [![Launch the VirtualProctor Stack with CloudFormation](docs/deploy-to-aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=VirtualProctor&templateURL=https://solution-builders-us-east-1.s3.us-east-1.amazonaws.com/amazon-rekognition-virtual-proctor/latest/template.yaml)|
-|**US East (Ohio)** (us-east-2) | [![Launch the VirtualProctor Stack with CloudFormation](docs/deploy-to-aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-2#/stacks/new?stackName=VirtualProctor&templateURL=https://solution-builders-us-east-2.s3.us-east-2.amazonaws.com/amazon-rekognition-virtual-proctor/latest/template.yaml)|
-|**US West (Oregon)** (us-west-2) | [![Launch the VirtualProctor Stack with CloudFormation](docs/deploy-to-aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?stackName=VirtualProctor&templateURL=https://solution-builders-us-west-2.s3.us-west-2.amazonaws.com/amazon-rekognition-virtual-proctor/latest/template.yaml)|
-|**EU (Ireland)** (eu-west-1) | [![Launch the VirtualProctor Stack with CloudFormation](docs/deploy-to-aws.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-west-1#/stacks/new?stackName=VirtualProctor&templateURL=https://solution-builders-eu-west-1.s3.eu-west-1.amazonaws.com/amazon-rekognition-virtual-proctor/latest/template.yaml)|
-
+| Region                                | Launch Template                                                                                                                                                                                                                                                                                                               |
+| ------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **US East (N. Virginia)** (us-east-1) | [![Launch the VirtualProctor Stack with CloudFormation](docs/deploy-to-aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=VirtualProctor&templateURL=https://solution-builders-us-east-1.s3.us-east-1.amazonaws.com/amazon-rekognition-virtual-proctor/latest/template.yaml) |
+| **US East (Ohio)** (us-east-2)        | [![Launch the VirtualProctor Stack with CloudFormation](docs/deploy-to-aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-2#/stacks/new?stackName=VirtualProctor&templateURL=https://solution-builders-us-east-2.s3.us-east-2.amazonaws.com/amazon-rekognition-virtual-proctor/latest/template.yaml) |
+| **US West (Oregon)** (us-west-2)      | [![Launch the VirtualProctor Stack with CloudFormation](docs/deploy-to-aws.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?stackName=VirtualProctor&templateURL=https://solution-builders-us-west-2.s3.us-west-2.amazonaws.com/amazon-rekognition-virtual-proctor/latest/template.yaml) |
+| **EU (Ireland)** (eu-west-1)          | [![Launch the VirtualProctor Stack with CloudFormation](docs/deploy-to-aws.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-west-1#/stacks/new?stackName=VirtualProctor&templateURL=https://solution-builders-eu-west-1.s3.eu-west-1.amazonaws.com/amazon-rekognition-virtual-proctor/latest/template.yaml) |
 
 2. If prompted, login using your AWS account credentials.
 3. You should see a screen titled "_Create Stack_" at the "_Specify template_" step. The fields specifying the CloudFormation template are pre-populated. Click the _Next_ button at the bottom of the page.
