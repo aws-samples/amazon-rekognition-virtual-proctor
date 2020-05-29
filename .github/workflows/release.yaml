@@ -26,6 +26,8 @@ jobs:
           node-version: 12
       - name: Install dependencies
         run: npm i
+      - name: Build Template
+        run: npm run build
       # Release if required
       - name: Set version
         id: version
