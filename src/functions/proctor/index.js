@@ -1,7 +1,13 @@
 const AWS = require("aws-sdk");
 const uuid = require("uuid").v4;
 
-const { COLLECTION_ID, FACES_TABLENAME, REGION } = process.env;
+const {
+  COLLECTION_ID,
+  FACES_TABLENAME,
+  MIN_CONFIDENCE,
+  OBJECTS_OF_INTEREST_LABELS,
+  REGION,
+} = process.env;
 
 const rekognition = new AWS.Rekognition({ region: REGION });
 const dynamo = new AWS.DynamoDB({ region: REGION });
@@ -53,9 +59,7 @@ exports.indexHandler = async (event) => {
 const fetchFaces = async (imageBytes) => {
   /*
     Detect Faces
-
     Uses Rekognition's DetectFaces functionality
-    to ensure only one fece is present on videp
   */
 
   const facesTest = {
@@ -79,32 +83,30 @@ const fetchFaces = async (imageBytes) => {
 
 const fetchLabels = async (imageBytes) => {
   /*
-    Detect Labels
-
+    Detect Objects Of Interest
     Uses Rekognition's DetectLabels functionality
-    to detect forbidden objects
   */
 
-  const forbiddenObjects = ["Mobile Phone", "Cell Phone"];
-
-  const labelsTest = {
-    TestName: "Objects of Interest",
-  };
+  const objectsOfInterestLabels = OBJECTS_OF_INTEREST_LABELS.trim().split(",");
+  const labelsTest = { TestName: "Objects of Interest" };
 
   const detectLabels = () =>
     rekognition
-      .detectLabels({ Image: { Bytes: imageBytes }, MinConfidence: 85 })
+      .detectLabels({
+        Image: { Bytes: imageBytes },
+        MinConfidence: MIN_CONFIDENCE,
+      })
       .promise();
 
   try {
     const labels = await detectLabels();
-    const forbidden = labels.Labels.filter((x) =>
-      forbiddenObjects.includes(x.Name)
+    const objectsOfInterest = labels.Labels.filter((x) =>
+      objectsOfInterestLabels.includes(x.Name)
     );
-    labelsTest.Success = forbidden.length === 0;
+    labelsTest.Success = objectsOfInterest.length === 0;
     labelsTest.Details = labelsTest.Success
       ? "0"
-      : forbidden.map((x) => x.Name).join(", ");
+      : objectsOfInterest.map((x) => x.Name).join(", ");
   } catch (e) {
     labelsTest.Success = false;
     labelsTest.Details = "Server error";
@@ -114,8 +116,7 @@ const fetchLabels = async (imageBytes) => {
 
 const fetchModerationLabels = async (imageBytes) => {
   /*
-    Detect Unsafe images
-
+    Detect Unsafe Content
     Uses Rekognition's DetectModerationLabels functionality
   */
   const moderationLabelsTest = {
@@ -126,7 +127,7 @@ const fetchModerationLabels = async (imageBytes) => {
     rekognition
       .detectModerationLabels({
         Image: { Bytes: imageBytes },
-        MinConfidence: 85,
+        MinConfidence: MIN_CONFIDENCE,
       })
       .promise();
 
@@ -164,7 +165,7 @@ const searchForIndexedFaces = async (imageBytes) => {
     rekognition
       .searchFacesByImage({
         CollectionId: COLLECTION_ID,
-        FaceMatchThreshold: 85,
+        FaceMatchThreshold: MIN_CONFIDENCE,
         MaxFaces: 1,
         Image: { Bytes: imageBytes },
       })
