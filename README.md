@@ -34,7 +34,7 @@ It will monitor that:
 
 #### Prerequisites
 
-To deploy the sample application you will require an AWS account. If you don’t already have an AWS account, create one at <https://aws.amazon.com> by following the on-screen instructions. Your access to the AWS account must have IAM permissions to launch AWS CloudFormation templates that create IAM roles.
+To deploy the sample application, you will require an AWS account. If you don’t already have an AWS account, create one at <https://aws.amazon.com> by following the on-screen instructions. Your access to the AWS account must have IAM permissions to launch AWS CloudFormation templates that create IAM roles.
 
 To use the sample application you will require a [modern browser](https://caniuse.com/#feat=stream) and a webcam.
 
