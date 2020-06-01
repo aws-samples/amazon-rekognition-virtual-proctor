@@ -5,16 +5,16 @@ Proctoring is the act of supervising an exam or course online.
 Using web-based applications, virtual proctoring platforms allow test takers to be virtually monitored by a human via the webcam on their computer.
 To increase the scale of the test taking and improve a human proctor’s ability to monitor students, virtual proctoring services are now implementing AI/ML to support the human proctor.
 
-Virtual Proctor is a solution that leverages Amazon Rekognition to show scalable way to online testing.
+Virtual Proctor is a solution that leverages Amazon Rekognition to show a scalable way to conduct online testing.
 
-It show how you can implement rules such as:
+It shows how you can implement rules such as:
 
-1. Detecting objects of interest (such as mobile phone)
-2. Detecting number of people
-3. Recognizing the person who taking test
-4. Detecting unsafe content (such as explicit adult content or violent content)
+- Detecting objects of interest (such as mobile phone)
+- Detecting the number of people present
+- Recognizing the person who is taking a test
+- Detecting unsafe content (such as explicit adult content or violent content)
 
-You can also use Amazon Rekognition Custom Labels to detect other custom objects of interest.
+You can also use [Amazon Rekognition Custom Labels](https://aws.amazon.com/rekognition/custom-labels-features/) to detect other custom objects of interest.
 
 ### Index
 
@@ -94,13 +94,13 @@ The demo application is deployed as an [AWS CloudFormation](https://aws.amazon.c
 
 The application is accessed using a web browser. The address is the _url_ output from the CloudFormation stack created during the Deployment steps.
 
-When accessing the application for the first time, you need to use the Admin e-mail provided during Stack Creation as username. A temporary password will be sent to the same e-mail address. After authentication, it will be necessary to create a new password and click "Change".
+When accessing the application for the first time, you need to use the Admin e-mail provided during Stack Creation as the username. A temporary password will be sent to the same e-mail address. After authentication, it will be necessary to create a new password and click "Change".
 
 To manage users, you can use the [Cognito Users Pool console](https://console.aws.amazon.com/cognito/users).
 
 ### Remove the application
 
-To remove the application open the AWS CloudFormation Console, click the Virtual Proctor project, right-click and select "_Delete Stack_". Your stack will take some time to be deleted. You can track its progress in the "Events" tab. When it is done, the status will change from DELETE_IN_PROGRESS" to "DELETE_COMPLETE". It will then disappear from the list.
+To remove the application open the AWS CloudFormation Console, click the Virtual Proctor project, right-click and select "_Delete Stack_". Your stack will take some time to be deleted. You can track its progress in the "Events" tab. When it is done, the status will change from "_DELETE_IN_PROGRESS_" to "_DELETE_COMPLETE_". It will then disappear from the list.
 
 ### Making changes to the code and customization
 
