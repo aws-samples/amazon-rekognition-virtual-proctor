@@ -9,10 +9,10 @@ Virtual Proctor is a solution that leverages Amazon Rekognition to show scalable
 
 It show how you can implement rules such as:
 
-1. Detecting objects of interest (such as mobile phone)
-2. Detecting number of people
-3. Recognizing the person who taking test
-4. Detecting unsafe content (such as explicit adult content or violent content)
+- Detecting objects of interest (such as mobile phone)
+- Detecting number of people
+- Recognizing the person who taking test
+- Detecting unsafe content (such as explicit adult content or violent content)
 
 You can also use Amazon Rekognition Custom Labels to detect other custom objects of interest.
 
