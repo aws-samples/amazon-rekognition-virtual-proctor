@@ -1,4 +1,4 @@
-## Amazon Rekognition Virtual Proctor
+## Virtual Proctor using Amazon Rekognition
 
 Proctoring is the act of supervising an exam or course online.
 
