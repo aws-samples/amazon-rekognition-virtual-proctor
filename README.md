@@ -75,6 +75,7 @@ The demo application is deployed as an [AWS CloudFormation](https://aws.amazon.c
 
    - "_I acknowledge that AWS CloudFormation might create IAM resources_"
    - "_I acknowledge that AWS CloudFormation might create IAM resources with custom names_"
+   - "_I acknowledge that AWS CloudFormation might require the following capability: CAPABILITY_AUTO_EXPAND_"
 
    These are required to allow CloudFormation to create a Role to allow access to resources needed by the stack and name the resources in a dynamic way.
 
