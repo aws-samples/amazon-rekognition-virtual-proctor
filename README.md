@@ -14,7 +14,7 @@ It show how you can implement rules such as:
 - Recognizing the person who taking test
 - Detecting unsafe content (such as explicit adult content or violent content)
 
-You can also use Amazon Rekognition Custom Labels to detect other custom objects of interest.
+You can also use [Amazon Rekognition Custom Labels](https://aws.amazon.com/rekognition/custom-labels-features/) to detect other custom objects of interest.
 
 ### Index
 
