@@ -5,13 +5,16 @@ Proctoring is the act of supervising an exam or course online.
 Using web-based applications, virtual proctoring platforms allow test takers to be virtually monitored by a human via the webcam on their computer.
 To increase the scale of the test taking and improve a human proctor’s ability to monitor students, virtual proctoring services are now implementing AI/ML to support the human proctor.
 
-Amazon Rekognition Virtual Proctor is a solution that leverages Amazon Rekognition.
+Virtual Proctor is a solution that leverages Amazon Rekognition to show scalable way to online testing.
 
-It will monitor that:
+It show how you can implement rules such as:
 
-1. The person who starts the exam is the same person that takes the exam (they don't switch to another student)
-2. Only one face can be detected on screen
-3. Objects of interest such as a mobile phone are not present
+1. Detecting objects of interest (such as mobile phone)
+2. Detecting number of people
+3. Recognizing the person who taking test
+4. Detecting unsafe content (such as explicit adult content or violent content)
+
+You can also use Amazon Rekognition Custom Labels to detect other custom objects of interest.
 
 ### Index
 
