@@ -14,7 +14,7 @@ Globals:
         MIN_CONFIDENCE: !Ref MinConfidence
         OBJECTS_OF_INTEREST_LABELS: !Join [",", !Ref ObjectsOfInterestLabels]
         REGION: !Ref AWS::Region
-        VERSION: '0.4'
+        VERSION: '0.5'
   Api:
     EndpointConfiguration: REGIONAL
     Cors:
@@ -87,13 +87,15 @@ Conditions:
   WithCloudFront: !Equals [!Ref CreateCloudFrontDistribution, 'true']
 
 Outputs:
+  api:
+    Value: !Sub https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/
+    Description: Virtual Proctor API
   url:
     Value: !If 
       - WithCloudFront
       - !Sub 'https://${CloudFrontDistribution.DomainName}'
       - !Sub 'https://${WebUIBucket.RegionalDomainName}/index.html'
     Description: Virtual Proctor URL
-
 Resources:
 
   SetupRekognitionAndWebUI:
@@ -155,14 +157,16 @@ Resources:
       AdminCreateUserConfig:
         AllowAdminCreateUserOnly: true
         InviteMessageTemplate:
-          EmailMessage: 'Your Amazon Rekognition Virtual Proctor username is {username} and the temporary password is {####}'
+          EmailMessage: !Sub
+            - 'Your Amazon Rekognition Virtual Proctor username is {username} and the temporary password is {####}<br><br>Click here to access the web interface: <a href="${UIUrl}">${UIUrl}</a>'
+            - { UIUrl: !If [WithCloudFront, !Sub 'https://${CloudFrontDistribution.DomainName}', !Sub 'https://${WebUIBucket.RegionalDomainName}/index.html'] }
           EmailSubject: 'Your temporary password for Amazon Rekognition Virtual Proctor'
           SMSMessage: 'Your Amazon Rekognition Virtual Proctor username is {username} and the temporary password is {####}'
       AutoVerifiedAttributes:
         - email
       Policies:
         PasswordPolicy:
-          MinimumLength: 6
+          MinimumLength: 8
           RequireLowercase: false
           RequireNumbers: false
           RequireSymbols: false
@@ -178,6 +182,7 @@ Resources:
       
   CognitoUserPoolUser:
     Type: AWS::Cognito::UserPoolUser
+    DependsOn: SetupRekognitionAndWebUI
     Properties:
       Username: !Ref AdminEmail
       UserPoolId: !Ref CognitoUserPool
