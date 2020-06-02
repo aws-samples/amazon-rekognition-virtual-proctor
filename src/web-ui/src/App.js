@@ -83,8 +83,7 @@ export default () => {
                   height: 640,
                   facingMode: "user",
                 }}
-                width="100%"
-                height="100%"
+                style={{ width: "100%", marginTop: "10px" }}
               />
             </Col>
             <Col md={4} sm={6}>
