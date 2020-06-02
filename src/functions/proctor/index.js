@@ -114,7 +114,10 @@ const fetchLabels = async (imageBytes) => {
     objectsOfInterestTest.Success = objectsOfInterest.length === 0;
     objectsOfInterestTest.Details = objectsOfInterestTest.Success
       ? "0"
-      : objectsOfInterest.map((x) => x.Name).join(", ");
+      : objectsOfInterest
+          .map((x) => x.Name)
+          .sort()
+          .join(", ");
   } catch (e) {
     console.log(e);
     objectsOfInterestTest.Success = false;
@@ -148,7 +151,9 @@ const fetchModerationLabels = async (imageBytes) => {
     moderationLabelsTest.Success = nLabels === 0;
     moderationLabelsTest.Details = moderationLabelsTest.Success
       ? "0"
-      : labels.ModerationLabels.map((l) => l.Name).join(", ");
+      : labels.ModerationLabels.map((l) => l.Name)
+          .sort()
+          .join(", ");
   } catch (e) {
     console.log(e);
     moderationLabelsTest.Success = false;
