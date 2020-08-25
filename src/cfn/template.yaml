@@ -14,7 +14,7 @@ Globals:
         MIN_CONFIDENCE: !Ref MinConfidence
         OBJECTS_OF_INTEREST_LABELS: !Join [",", !Ref ObjectsOfInterestLabels]
         REGION: !Ref AWS::Region
-        VERSION: '0.9'
+        VERSION: '0.10'
   Api:
     EndpointConfiguration: REGIONAL
     Cors:
@@ -70,6 +70,13 @@ Parameters:
     Description: Comma-delimited list of labels used to detect Objects of interest
     Type: CommaDelimitedList
     Default: "Mobile Phone,Cell Phone"
+  PreBuiltArtefactsBucketOverride:
+    Description: >
+      The name of an S3 Bucket containing the built web-ui.
+      Use this to deploy a modified version of the Virtual Proctor web ui. 
+      The default is to use the Virtual Proctor version from a predefined bucket in the given region (for example solution-builders-us-west-1)
+    Type: String
+    Default: "false"
   ResourcePrefix:
     Description: AWS Resources are named based on the value of this parameter. You must customise this if you are launching more than one instance of the stack within the same account.
     Type: String
@@ -84,7 +91,9 @@ Parameters:
       - "false"
 
 Conditions:
-  WithCloudFront: !Equals [!Ref CreateCloudFrontDistribution, 'true']
+  WithCloudFront: !Equals [!Ref CreateCloudFrontDistribution, "true"]
+  DefaultPreBuiltArtefactsBucket:
+    !Equals [!Ref PreBuiltArtefactsBucketOverride, "false"]
 
 Outputs:
   api:
@@ -259,7 +268,12 @@ Resources:
           COGNITO_USERPOOLCLIENT_ID: !Ref CognitoUserPoolClient
           COLLECTION_ID: !Ref ResourcePrefix
           CREATE_CLOUDFRONT_DISTRIBUTION: !Ref CreateCloudFrontDistribution
-          FROM_BUCKET: !Sub solution-builders-${AWS::Region}
+          FROM_BUCKET:
+            !If [
+              DefaultPreBuiltArtefactsBucket,
+              !Sub 'solution-builders-${AWS::Region}',
+              !Ref PreBuiltArtefactsBucketOverride,
+            ]
           REGION: !Ref AWS::Region
           TO_BUCKET: !Ref WebUIBucket
       Timeout: 900
@@ -276,7 +290,12 @@ Resources:
               - !Sub arn:aws:s3:::${WebUIBucket}/*
           - Effect: Allow
             Action: s3:GetObject
-            Resource: !Sub arn:aws:s3:::solution-builders-${AWS::Region}/*
+            Resource:
+              !If [
+                DefaultPreBuiltArtefactsBucket,
+                !Sub 'arn:aws:s3:::solution-builders-${AWS::Region}/*',
+                !Sub 'arn:aws:s3:::${PreBuiltArtefactsBucketOverride}/*',
+              ]
           - Effect: Allow
             Action:
               - rekognition:CreateCollection

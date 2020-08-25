@@ -94,3 +94,16 @@ To develop a local version of the web UI:
 2. Once the CloudFormation stack is deployed, a `url` output will be available from CloudFormation in the format of `https://<s3-bucket-url>/index.html`. Download the file `https://<s3-bucket-url>/settings.js` to the `src/web-ui/public/` folder. In this way, it will be possible to develop locally using the API Gateway and Cognito Pool Id that CloudFormation just created in AWS. Note that the `settings.js` is "*gitignored*".
 3. Run `npm start`. The browser will automatically open the UI with hot reloading enabled.
 To make changes, edit the files in the `src/web-ui` folder. 
+
+
+### Deploying a Customised Version of the Web UI
+
+To develop a customised version of the web UI:
+
+1. Make the desired changes to the web UI
+2. Run the `npm run build` command in the root of the repository
+3. Upload the `frontend.zip` directory to the desired bucket using `CUSTOM_BUCKET=<your bucket> npm run upload-custom-bucket`. This will copy `frontend.zip` to `s3://${CUSTOM_BUCKET}/amazon-rekognition-virtual-proctor/${Version}/frontend.zip`
+4. Package and Deploy `cfn/template.yaml`, setting the `PreBuiltArtefactsBucketOverride` parameter to `$CUSTOM_BUCKET`
+
+
+
