@@ -3,7 +3,7 @@ import { Card } from "react-bootstrap";
 
 import Icon from "./Icon";
 
-export default ({ testResults }) => (
+const EngagementsSummary = ({ testResults }) => (
   <div className="tests-container">
     {testResults.map((test, index) => (
       <Card style={{ marginTop: "20px", textAlign: "left" }} key={index}>
@@ -18,3 +18,5 @@ export default ({ testResults }) => (
     ))}
   </div>
 );
+
+export default EngagementsSummary;

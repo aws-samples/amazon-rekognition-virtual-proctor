@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Button } from "react-bootstrap";
 
-export default ({ enabled, onClick }) => {
+const RekognitionButton = ({ enabled, onClick }) => {
   const [started, setStarted] = useState(false);
 
   return (
@@ -18,3 +18,5 @@ export default ({ enabled, onClick }) => {
     </Button>
   );
 };
+
+export default RekognitionButton;

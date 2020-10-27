@@ -11,7 +11,7 @@ import EngagementSummary from "./components/EngagementsSummary";
 import Header from "./components/Header";
 import SettingsHelp from "./components/SettingsHelp";
 
-export default () => {
+const App = () => {
   const [authState, setAuthState] = useState(undefined);
   const [readyToStream, setReadyToStream] = useState(false);
   const [testResults, setTestResults] = useState([]);
@@ -122,3 +122,5 @@ export default () => {
     </div>
   );
 };
+
+export default App;
