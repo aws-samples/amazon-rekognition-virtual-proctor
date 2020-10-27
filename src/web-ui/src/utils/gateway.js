@@ -1,6 +1,6 @@
 import request from "./request";
 
-export default {
+const gateway = {
   addUser(params) {
     return request("/faces/index", "post", {
       image: params.image,
@@ -12,3 +12,5 @@ export default {
     return request("/process", "post", { image });
   },
 };
+
+export default gateway;

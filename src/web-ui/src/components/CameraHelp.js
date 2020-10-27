@@ -1,7 +1,7 @@
 import React from "react";
 import { Col, Row } from "react-bootstrap";
 
-export default props => {
+const CameraHelp = (props) => {
   const currentUrl = window.location.href;
   if (props.show) {
     return (
@@ -19,3 +19,5 @@ export default props => {
   }
   return "";
 };
+
+export default CameraHelp;

@@ -3,7 +3,7 @@ import { Alert, Button, Form, Modal } from "react-bootstrap";
 
 import { isEmpty } from "../utils";
 
-export default ({ onSave }) => {
+const AddUserModal = ({ onSave }) => {
   const [formState, setFormState] = useState("initial");
   const [fullName, setFullName] = useState("");
   const [image, setImage] = useState(undefined);
@@ -124,3 +124,5 @@ export default ({ onSave }) => {
     </>
   );
 };
+
+export default AddUserModal;
