@@ -1,23 +1,24 @@
 # Contributing Guidelines
 
-Thank you for your interest in contributing to our project. Whether it's a bug report, new feature, correction, or additional 
+Thank you for your interest in contributing to our project. Whether it's a bug report, new feature, correction, or additional
 documentation, we greatly value feedback and contributions from our community.
 
-Please read through this document before submitting any issues or pull requests to ensure we have all the necessary 
+Please read through this document before submitting any issues or pull requests to ensure we have all the necessary
 information to effectively respond to your bug report or contribution.
 
 ## Index
 
-* [Introduction](#introduction)
-  * [Reporting Bugs/Feature Requests](#reporting-bugsfeature-requests)
-  * [Contributing via Pull Requests](#contributing-via-pull-requests)
-  * [Finding contributions to work on](#finding-contributions-to-work-on)
-  * [Code of Conduct](#code-of-conduct)
-  * [Security issue notifications](#security-issue-notifications)
-  * [Licensing](#licensing)
-* [Prerequisites](#prerequisites)
-* [Working with CloudFormation](#working-with-cloudformation)
-* [Working with the Web UI](#working-with-the-web-ui)
+- [Introduction](#introduction)
+  - [Reporting Bugs/Feature Requests](#reporting-bugsfeature-requests)
+  - [Contributing via Pull Requests](#contributing-via-pull-requests)
+  - [Finding contributions to work on](#finding-contributions-to-work-on)
+  - [Code of Conduct](#code-of-conduct)
+  - [Security issue notifications](#security-issue-notifications)
+  - [Licensing](#licensing)
+- [Prerequisites](#prerequisites)
+- [Working with CloudFormation](#working-with-cloudformation)
+- [Working with the Web UI](#working-with-the-web-ui)
+- [Deploying a Customised Version of the Web UI](#deploying-a-customised-version-of-the-web-ui)
 
 ## Introduction
 
@@ -25,19 +26,19 @@ information to effectively respond to your bug report or contribution.
 
 We welcome you to use the GitHub issue tracker to report bugs or suggest features.
 
-When filing an issue, please check [existing open](https://github.com/aws-samples/amazon-rekognition-virtual-proctor/issues), or [recently closed](https://github.com/aws-samples/amazon-rekognition-virtual-proctor/issues?utf8=%E2%9C%93&q=is%3Aissue%20is%3Aclosed%20), issues to make sure somebody else hasn't already 
+When filing an issue, please check [existing open](https://github.com/aws-samples/amazon-rekognition-virtual-proctor/issues), or [recently closed](https://github.com/aws-samples/amazon-rekognition-virtual-proctor/issues?utf8=%E2%9C%93&q=is%3Aissue%20is%3Aclosed%20), issues to make sure somebody else hasn't already
 reported the issue. Please try to include as much information as you can. Details like these are incredibly useful:
 
-* A reproducible test case or series of steps
-* The version of our code being used
-* Any modifications you've made relevant to the bug
-* Anything unusual about your environment or deployment
-
+- A reproducible test case or series of steps
+- The version of our code being used
+- Any modifications you've made relevant to the bug
+- Anything unusual about your environment or deployment
 
 ### Contributing via Pull Requests
+
 Contributions via pull requests are much appreciated. Before sending us a pull request, please ensure that:
 
-1. You are working against the latest source on the *master* branch.
+1. You are working against the latest source on the _master_ branch.
 2. You check existing open, and recently merged, pull requests to make sure someone else hasn't addressed the problem already.
 3. You open an issue to discuss any significant work - we would hate for your time to be wasted.
 
@@ -50,23 +51,22 @@ To send us a pull request, please:
 5. Send us a pull request, answering any default questions in the pull request interface.
 6. Pay attention to any automated CI failures reported in the pull request, and stay involved in the conversation.
 
-GitHub provides additional document on [forking a repository](https://help.github.com/articles/fork-a-repo/) and 
+GitHub provides additional document on [forking a repository](https://help.github.com/articles/fork-a-repo/) and
 [creating a pull request](https://help.github.com/articles/creating-a-pull-request/).
 
-
 ### Finding contributions to work on
-Looking at the existing issues is a great way to find something to contribute on. As our projects, by default, use the default GitHub issue labels (enhancement/bug/duplicate/help wanted/invalid/question/wontfix), looking at any ['help wanted'](https://github.com/aws-samples/amazon-rekognition-virtual-proctor/labels/help%20wanted) issues is a great place to start. 
 
+Looking at the existing issues is a great way to find something to contribute on. As our projects, by default, use the default GitHub issue labels (enhancement/bug/duplicate/help wanted/invalid/question/wontfix), looking at any ['help wanted'](https://github.com/aws-samples/amazon-rekognition-virtual-proctor/labels/help%20wanted) issues is a great place to start.
 
 ### Code of Conduct
-This project has adopted the [Amazon Open Source Code of Conduct](https://aws.github.io/code-of-conduct). 
-For more information see the [Code of Conduct FAQ](https://aws.github.io/code-of-conduct-faq) or contact 
+
+This project has adopted the [Amazon Open Source Code of Conduct](https://aws.github.io/code-of-conduct).
+For more information see the [Code of Conduct FAQ](https://aws.github.io/code-of-conduct-faq) or contact
 opensource-codeofconduct@amazon.com with any additional questions or comments.
 
-
 ### Security issue notifications
-If you discover a potential security issue in this project we ask that you notify AWS/Amazon Security via our [vulnerability reporting page](http://aws.amazon.com/security/vulnerability-reporting/). Please do **not** create a public github issue.
 
+If you discover a potential security issue in this project we ask that you notify AWS/Amazon Security via our [vulnerability reporting page](http://aws.amazon.com/security/vulnerability-reporting/). Please do **not** create a public github issue.
 
 ### Licensing
 
@@ -78,8 +78,8 @@ We may ask you to sign a [Contributor License Agreement (CLA)](http://en.wikiped
 
 The following applications are required to contribute:
 
-* Node.js >=v12
-* AWS CLI
+- Node.js >=v12
+- AWS CLI
 
 To start, run `npm install`.
 
@@ -90,20 +90,18 @@ The CloudFormation source code is located inside the `src/cfn` directory. The te
 ## Working with the Web UI
 
 To develop a local version of the web UI:
-1. Deploy the CloudFormation template.
-2. Once the CloudFormation stack is deployed, a `url` output will be available from CloudFormation in the format of `https://<s3-bucket-url>/index.html`. Download the file `https://<s3-bucket-url>/settings.js` to the `src/web-ui/public/` folder. In this way, it will be possible to develop locally using the API Gateway and Cognito Pool Id that CloudFormation just created in AWS. Note that the `settings.js` is "*gitignored*".
-3. Run `npm start`. The browser will automatically open the UI with hot reloading enabled.
-To make changes, edit the files in the `src/web-ui` folder. 
 
+1. Deploy the CloudFormation template.
+2. Once the CloudFormation stack is deployed, a `url` output will be available from CloudFormation in the format of `https://<s3-bucket-url>/index.html`. Download the file `https://<s3-bucket-url>/settings.js` to the `src/web-ui/public/` folder. In this way, it will be possible to develop locally using the API Gateway and Cognito Pool Id that CloudFormation just created in AWS. Note that the `settings.js` is "_gitignored_".
+3. Run `npm start`. The browser will automatically open the UI with hot reloading enabled.
+   To make changes, edit the files in the `src/web-ui` folder.
 
 ### Deploying a Customised Version of the Web UI
 
-To develop a customised version of the web UI:
+To deploy a customised version of the web UI via CloudFormation as new stack:
 
-1. Make the desired changes to the web UI
+1. Make the desired changes to the web UI and test them locally following the instructions as described in the previous chapter
 2. Run the `npm run build` command in the root of the repository
-3. Upload the `frontend.zip` directory to the desired bucket using `CUSTOM_BUCKET=<your bucket> npm run upload-custom-bucket`. This will copy `frontend.zip` to `s3://${CUSTOM_BUCKET}/amazon-rekognition-virtual-proctor/${Version}/frontend.zip`
-4. Package and Deploy `cfn/template.yaml`, setting the `PreBuiltArtefactsBucketOverride` parameter to `$CUSTOM_BUCKET`
-
-
-
+3. Upload the packaged UI to a staging Amazon S3 Bucket by running `CFN_BUCKET=<your bucket> npm run upload-custom-bucket`. This will copy `amazon-rekognition-virtual-proctor.zip` to `s3://${CFN_BUCKET}/amazon-rekognition-virtual-proctor/${Version}/frontend.zip`
+4. Package the CloudFormation template by running `CFN_BUCKET=<your bucket> npm run cfn-package`. This step will create a `cfn/packaged.yaml` template ready to be deployed.
+5. Deploy the template making sure you specify the various parameters and override the pre-built artefacts bucket to your bucket, for instance by running `aws cloudformation deploy --template-file ./templates/packaged.yaml --stack-name VirtualProctorEdited --capabilities CAPABILITY_IAM CAPABILITY_AUTO_EXPAND --parameter-overrides PreBuiltArtefactsBucketOverride=<CFN_BUCKET> AdminEmail=<YOUR_EMAIL>`
