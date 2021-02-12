@@ -100,7 +100,7 @@ To develop a local version of the web UI:
 
 To deploy a customised version of the web UI via CloudFormation as new stack:
 
-1. Make the desired changes to the web UI and test them locally following the instructions as described in the previous chapter
+1. Make the desired changes to the web UI and test them locally following the instructions as described in the previous chapter, [Working with the Web UI](#working-with-the-web-ui)
 2. Run the `npm run build` command in the root of the repository
 3. Upload the packaged UI to a staging Amazon S3 Bucket by running `CFN_BUCKET=<your bucket> npm run upload-custom-bucket`. This will copy `amazon-rekognition-virtual-proctor.zip` to `s3://${CFN_BUCKET}/amazon-rekognition-virtual-proctor/${Version}/frontend.zip`
 4. Package the CloudFormation template by running `CFN_BUCKET=<your bucket> npm run cfn-package`. This step will create a `cfn/packaged.yaml` template ready to be deployed.
