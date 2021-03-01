@@ -25,6 +25,7 @@ You can also use [Amazon Rekognition Custom Labels](https://aws.amazon.com/rekog
   - [Accessing the application](#accessing-the-application)
 - [Remove the application](#remove-the-application)
 - [Making changes to the code and customization](#making-changes-to-the-code-and-customization)
+- [Samples]
 - [Contributing](#contributing)
 
 ### Architecture
@@ -108,6 +109,10 @@ To remove the application open the AWS CloudFormation Console, click the Virtual
 ### Making changes to the code and customization
 
 The [contributing guidelines](CONTRIBUTING.md) contains some instructions about how to run the front-end locally and make changes to the back-end stack.
+
+### Samples
+
+[Python Samples](./python-samples) contains python snippets for virtual proctoring usecases
 
 ## Contributing
 
