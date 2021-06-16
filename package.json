@@ -6,7 +6,7 @@
     "build": "npm run webui-build && npm run cfn-build && npm run webui-package",
     "cfn-build": "npm run cfn-ensure-dist && cfn-flip -c -n -l src/cfn/template.yaml templates/template.yaml && npm run cfn-lambdas-dist && npm run cfn-copy-lambda",
     "cfn-copy-lambda": "cp -R src/functions ./backend/",
-    "cfn-package":"aws cloudformation package --template-file templates/template.yaml --s3-bucket $CFN_BUCKET --output-template-file templates/packaged.yaml",
+    "cfn-package": "aws cloudformation package --template-file templates/template.yaml --s3-bucket $CFN_BUCKET --output-template-file templates/packaged.yaml",
     "cfn-ensure-dist": "if [ ! -d './templates' ]; then mkdir templates; fi",
     "cfn-lambdas-dist": "if [ ! -d './backend/functions/' ]; then mkdir -p backend/functions/; fi",
     "cfn-test-local": "npm run cfn-build && rain deploy templates/template.yaml VirtualProctorLocal -r eu-west-1",
