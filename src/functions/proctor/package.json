@@ -4,7 +4,7 @@
     "private": true,
     "main": "index.js",
     "dependencies": {
-        "aws-sdk": "^2.680.0",
+        "aws-sdk": "^2.814.0",
         "uuid": "^8.1.0"
     }
 }
