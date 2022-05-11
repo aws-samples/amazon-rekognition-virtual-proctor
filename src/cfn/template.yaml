@@ -225,7 +225,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Handler: index.indexHandler
-      CodeUri: ../functions/proctor/
+      CodeUri: ../backend/functions/proctor/
       Events:
         Get:
           Type: Api
@@ -242,7 +242,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Handler: index.processHandler
-      CodeUri: ../functions/proctor/
+      CodeUri: ../backend/functions/proctor/
       Events:
         Get:
           Type: Api
@@ -260,7 +260,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Handler: index.handler
-      CodeUri: ../functions/setup/
+      CodeUri: ../backend/functions/setup/
       Description: Custom Lambda resource for the Virtual Proctor Cloudformation Stack
       Environment:
         Variables:
