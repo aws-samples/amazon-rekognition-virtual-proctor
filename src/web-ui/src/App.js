@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { AmplifyAuthenticator, AmplifySignIn } from "@aws-amplify/ui-react";
+import { AmplifyAuthenticator, AmplifySignIn } from "@aws-amplify/ui-react/legacy";
 import { onAuthUIStateChange } from "@aws-amplify/ui-components";
 import Webcam from "react-webcam";
 import { Col, Row } from "react-bootstrap";
