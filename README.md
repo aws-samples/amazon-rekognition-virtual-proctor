@@ -25,7 +25,7 @@ You can also use [Amazon Rekognition Custom Labels](https://aws.amazon.com/rekog
   - [Accessing the application](#accessing-the-application)
 - [Remove the application](#remove-the-application)
 - [Making changes to the code and customization](#making-changes-to-the-code-and-customization)
-- [Samples]
+- [Samples](#samples)
 - [Contributing](#contributing)
 
 ### Architecture
