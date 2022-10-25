@@ -4,7 +4,7 @@ Transform: AWS::Serverless-2016-10-31
 
 Globals:
   Function:
-    Runtime: nodejs12.x
+    Runtime: nodejs16.x
     MemorySize: 128
     Timeout: 30
     Environment:
@@ -14,7 +14,7 @@ Globals:
         MIN_CONFIDENCE: !Ref MinConfidence
         OBJECTS_OF_INTEREST_LABELS: !Join [",", !Ref ObjectsOfInterestLabels]
         REGION: !Ref AWS::Region
-        VERSION: '2.0'
+        VERSION: '2.1'
   Api:
     EndpointConfiguration: REGIONAL
     Cors:
