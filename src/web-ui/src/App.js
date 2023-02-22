@@ -10,6 +10,7 @@ import CameraHelp from "./components/CameraHelp";
 import EngagementSummary from "./components/EngagementsSummary";
 import Header from "./components/Header";
 import SettingsHelp from "./components/SettingsHelp";
+import ConsentModal from "./components/ConsentModal";
 
 const App = () => {
   const [authState, setAuthState] = useState(undefined);
@@ -69,6 +70,7 @@ const App = () => {
         signedIn={signedIn}
         toggleRekognition={toggleRekognition}
       />
+      <ConsentModal></ConsentModal>
       {signedIn ? (
         <>
           <SettingsHelp show={!window.rekognitionSettings} />
