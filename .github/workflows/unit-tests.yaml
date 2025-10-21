@@ -8,6 +8,10 @@ on:
     - opened
     - edited
     - synchronize
+
+permissions:
+  contents: read
+
 jobs:
   unit_tests:
     name: Unit tests
