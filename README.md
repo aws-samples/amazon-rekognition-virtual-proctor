@@ -1,7 +1,7 @@
 ## Virtual Proctor using Amazon Rekognition
 
 > [!WARNING]
-> This repository is archived and no longer maintained. It may no longer work, or refer to third-party libraries with known problems.
+> This repository is archived and no longer maintained.
 
 Proctoring is the act of supervising an exam or course online.
 
