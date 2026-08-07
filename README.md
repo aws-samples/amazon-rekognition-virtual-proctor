@@ -1,5 +1,8 @@
 ## Virtual Proctor using Amazon Rekognition
 
+> [!WARNING]
+> This repository is archived and no longer maintained.
+
 Proctoring is the act of supervising an exam or course online.
 
 Using web-based applications, virtual proctoring platforms allow test takers to be virtually monitored by a human via the webcam on their computer.
