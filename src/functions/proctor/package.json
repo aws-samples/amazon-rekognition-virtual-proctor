@@ -5,6 +5,6 @@
     "main": "index.js",
     "dependencies": {
         "aws-sdk": "^2.1354.0",
-        "uuid": "^8.1.0"
+        "uuid": "^14.0.0"
     }
 }
